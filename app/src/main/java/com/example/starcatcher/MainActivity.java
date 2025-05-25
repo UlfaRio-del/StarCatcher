@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView highScoreText;
+    private static final String TAG = "MainActivity";
     private MediaPlayer menuMusic;
     private boolean isSoundOn = true;
 
@@ -19,22 +21,74 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        highScoreText = findViewById(R.id.highScoreText);
-        ImageButton btnSoundToggle = findViewById(R.id.btnSoundToggle);
-        View startButton = findViewById(R.id.startButton);
+        try {
+            initViews();
+            loadSettings();
+            initMenuMusic();
+        } catch (Exception e) {
+            Log.e(TAG, "Initialization error", e);
+            Toast.makeText(this, "Ошибка инициализации", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-        initMenuMusic();
-        loadHighScore();
+    private void initViews() {
+        try {
+            TextView highScoreText = findViewById(R.id.highScoreText);
+            ImageButton btnSoundToggle = findViewById(R.id.btnSoundToggle);
+            Button startButton = findViewById(R.id.startButton);
 
-        startButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, GameActivity.class);
-            intent.putExtra("soundEnabled", isSoundOn);
-            startActivity(intent);
-        });
+            // Загрузка рекорда
+            SharedPreferences prefs = getSharedPreferences("GamePrefs", MODE_PRIVATE);
+            int highScore = prefs.getInt("HighScore", 0);
+            highScoreText.setText("Рекорд: " + highScore);
 
-        btnSoundToggle.setOnClickListener(v -> {
+            // Кнопка звука
+            btnSoundToggle.setOnClickListener(v -> toggleSound());
+
+            // Кнопка старта
+            startButton.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    intent.putExtra("soundEnabled", isSoundOn);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e(TAG, "Start game error", e);
+                    Toast.makeText(this, "Ошибка запуска игры", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Views init error", e);
+        }
+    }
+
+    private void loadSettings() {
+        try {
+            SharedPreferences prefs = getSharedPreferences("GamePrefs", MODE_PRIVATE);
+            isSoundOn = prefs.getBoolean("soundEnabled", true);
+        } catch (Exception e) {
+            Log.e(TAG, "Load settings error", e);
+        }
+    }
+
+    private void initMenuMusic() {
+        try {
+            menuMusic = MediaPlayer.create(this, R.raw.game_music);
+            menuMusic.setLooping(true);
+            menuMusic.setVolume(isSoundOn ? 0.3f : 0f, isSoundOn ? 0.3f : 0f);
+            if (isSoundOn) {
+                menuMusic.start();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Menu music error", e);
+        }
+    }
+
+    private void toggleSound() {
+        try {
             isSoundOn = !isSoundOn;
-            updateSoundIcon(btnSoundToggle);
+            ImageButton btn = findViewById(R.id.btnSoundToggle);
+            btn.setImageResource(isSoundOn ? R.drawable.ic_volume_on : R.drawable.ic_volume_off);
+
             if (menuMusic != null) {
                 if (isSoundOn) {
                     menuMusic.start();
@@ -42,61 +96,47 @@ public class MainActivity extends AppCompatActivity {
                     menuMusic.pause();
                 }
             }
-            saveSoundPreference();
-        });
 
-        updateSoundIcon(btnSoundToggle);
-    }
-
-    private void initMenuMusic() {
-        menuMusic = MediaPlayer.create(this, R.raw.happy_music);
-        menuMusic.setLooping(true);
-        menuMusic.setVolume(isSoundOn ? 0.3f : 0f, isSoundOn ? 0.3f : 0f);
-        if (isSoundOn) {
-            menuMusic.start();
+            SharedPreferences prefs = getSharedPreferences("GamePrefs", MODE_PRIVATE);
+            prefs.edit().putBoolean("soundEnabled", isSoundOn).apply();
+        } catch (Exception e) {
+            Log.e(TAG, "Toggle sound error", e);
         }
-    }
-
-    private void loadHighScore() {
-        SharedPreferences prefs = getSharedPreferences("GamePrefs", MODE_PRIVATE);
-        int highScore = prefs.getInt("HighScore", 0);
-        highScoreText.setText("Рекорд: " + highScore);
-
-        // Загружаем настройку звука
-        isSoundOn = prefs.getBoolean("soundEnabled", true);
-    }
-
-    private void saveSoundPreference() {
-        SharedPreferences prefs = getSharedPreferences("GamePrefs", MODE_PRIVATE);
-        prefs.edit().putBoolean("soundEnabled", isSoundOn).apply();
-    }
-
-    private void updateSoundIcon(ImageButton btn) {
-        btn.setImageResource(isSoundOn ? R.drawable.ic_volume_on : R.drawable.ic_volume_off);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (menuMusic != null && menuMusic.isPlaying()) {
-            menuMusic.pause();
+        try {
+            if (menuMusic != null && menuMusic.isPlaying()) {
+                menuMusic.pause();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Pause error", e);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (menuMusic != null && !menuMusic.isPlaying() && isSoundOn) {
-            menuMusic.start();
+        try {
+            if (menuMusic != null && !menuMusic.isPlaying() && isSoundOn) {
+                menuMusic.start();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Resume error", e);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (menuMusic != null) {
-            menuMusic.release();
-            menuMusic = null;
+        try {
+            if (menuMusic != null) {
+                menuMusic.release();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Destroy error", e);
         }
     }
 }

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StarCatcher\n</string>
+    <string name="app_name">Star Catcher</string>
+    <string name="start_game">Начать игру</string>
+    <string name="score_hint">Очки: %d</string>
 </resources>

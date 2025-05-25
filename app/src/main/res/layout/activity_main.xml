@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/btnSoundToggle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_volume_on"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/highScoreText"
@@ -15,17 +28,8 @@
         android:textColor="@color/white"
         android:textSize="24sp" />
 
-    <ImageButton
-        android:id="@+id/btnSoundToggle"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerInside"
-        android:tint="@color/white" />
-
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerInParent="true"
@@ -35,14 +39,13 @@
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/versionText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:backgroundTint="@color/button_color"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
         android:text="Начать игру"
-        android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:background="@drawable/btn_rounded"
+        android:textAllCaps="false"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/versionText"
