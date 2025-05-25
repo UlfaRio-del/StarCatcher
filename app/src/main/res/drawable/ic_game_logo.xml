@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Основная звезда -->
+    <path
+        android:fillColor="#FFD700"
+        android:strokeColor="#FFA500"
+        android:strokeWidth="2"
+        android:pathData="M100,10 L123,65 L183,65 L136,98 L153,153 L100,123 L47,153 L64,98 L17,65 L77,65 Z"/>
+
+    <!-- Внутренняя звезда -->
+    <path
+        android:fillColor="#FFFF00"
+        android:pathData="M100,30 L117,65 L153,65 L123,88 L135,123 L100,108 L65,123 L77,88 L47,65 L83,65 Z"/>
+
+    <!-- Сияние (упрощенное) -->
+    <path
+        android:fillColor="#20FFFFFF"
+        android:pathData="M100,0 L110,30 L140,30 L115,50 L125,80 L100,60 L75,80 L85,50 L60,30 L90,30 Z"/>
+
+    <!-- Точки (исправленный синтаксис) -->
+    <group>
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M30,30 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M170,40 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
+    </group>
+</vector>
